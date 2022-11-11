@@ -3,8 +3,6 @@ from helpers.text_utils import create_tex_group, write_tex_group, straight_forwa
 from manim import *
 
 FONT_SIZE = DEFAULT_FONT_SIZE / 1.5
-QED = Tex(r'$\blacksquare$', font_size=FONT_SIZE,
-          tex_template=RUS_TEMPLATE, tex_to_color_map={r'$\blacksquare$': GREEN})
 DIOPHANTINE_EQ_DEF_TEXTS = [
     r'\textbf{Диофантовы уравнения \textendash\ это уравнения в целых числах}:',
     r'\begin{itemize} \item пифагоровы тройки \textendash\ целочисленные решения уравнения $a^2+b^2=c^2$ \textendash\ '
@@ -75,6 +73,9 @@ TEX_TO_COLOR_MAP = {
 class Scene3(Common):
     @staticmethod
     def meta_construct(self: Scene):
+        _qed = Tex(r'$\blacksquare$', font_size=FONT_SIZE,
+                   tex_template=RUS_TEMPLATE, tex_to_color_map={r'$\blacksquare$': GREEN})
+
         theorem_1 = create_tex_group(
             THEOREM_1_TEXTS, LEFT,
             font_size=FONT_SIZE,
@@ -96,7 +97,7 @@ class Scene3(Common):
         fade_out_objects(scene, to_right_proof[2:-1], 2)
         box_text = VGroup(to_right_proof[-1], box)
         self.play(box_text.animate.next_to(theorem_1[-2]))
-        self.play(Transform(box_text, QED.copy().next_to(theorem_1[-2])))
+        self.play(Transform(box_text, _qed.copy().next_to(theorem_1[-2])))
 
         # From left to right
         to_left_proof = create_tex_group(
@@ -108,7 +109,7 @@ class Scene3(Common):
         box = SurroundingRectangle(to_left_proof[-1], buff=.1)
         self.play(Create(box))
         box_text = VGroup(to_left_proof[-1], box)
-        qed = QED.copy().next_to(theorem_1[-1])
+        qed = _qed.copy().next_to(theorem_1[-1])
         self.play(Transform(box_text, qed))
         self.remove(box_text)
         self.add(qed)
@@ -141,6 +142,9 @@ PROOF_LEFT_2_TEXTS = [
 class Scene4(Common):
     @staticmethod
     def meta_construct(self: Scene):
+        _qed = Tex(r'$\blacksquare$', font_size=FONT_SIZE,
+                   tex_template=RUS_TEMPLATE, tex_to_color_map={r'$\blacksquare$': GREEN})
+
         theorem_2 = create_tex_group(
             THEOREM_2_TEXTS, LEFT,
             font_size=FONT_SIZE,
@@ -162,7 +166,7 @@ class Scene4(Common):
         fade_out_objects(scene, to_right_proof[:-1], 2)
         box_text = VGroup(to_right_proof[-1], box)
         self.play(box_text.animate.next_to(theorem_2[-2]))
-        self.play(Transform(box_text, QED.copy().next_to(theorem_2[-2])))
+        self.play(Transform(box_text, _qed.copy().next_to(theorem_2[-2])))
 
         # From left to right
         to_left_proof = create_tex_group(
@@ -176,7 +180,7 @@ class Scene4(Common):
         fade_out_objects(scene, to_left_proof[:-1], 2)
         box_text = VGroup(to_left_proof[-1], box)
         self.play(box_text.animate.next_to(theorem_2[-1]))
-        qed = QED.copy().next_to(theorem_2[-1])
+        qed = _qed.copy().next_to(theorem_2[-1])
         self.play(Transform(box_text, qed))
         self.remove(box_text)
         self.add(qed)
@@ -273,6 +277,6 @@ class Scene6(Common):
 
 
 if __name__ == '__main__':
-    with tempconfig({'quality': 'high_quality', 'preview': True, 'media_dir': '../media'}):
+    with tempconfig({'quality': 'high_quality', 'preview': True, 'media_dir': 'media'}):
         scene = Common(__name__)
         scene.render()
