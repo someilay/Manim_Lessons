@@ -2,7 +2,7 @@ from manim import *
 from typing import Optional, Callable, Union
 
 
-def create_tex_group(texts: list[str], align: np.ndarray, font_size: float,
+def create_tex_group(texts: list[Union[str, list[str]]], align: np.ndarray, font_size: float,
                      c_maps: Optional[Union[list[dict], dict]] = None, base_class: type = Tex, **kwargs) -> VGroup:
     if c_maps is None:
         c_maps = [dict()] * len(texts)
@@ -10,8 +10,13 @@ def create_tex_group(texts: list[str], align: np.ndarray, font_size: float,
         c_maps = [c_maps] * len(texts)
 
     return VGroup(
-        *[base_class(text, font_size=font_size, tex_to_color_map=c_map, **kwargs).align_to(align)
-          for text, c_map in zip(texts, c_maps)]
+        *[
+            (
+                base_class(text, font_size=font_size, tex_to_color_map=c_map, **kwargs) if isinstance(text, str) else
+                base_class(*text, font_size=font_size, tex_to_color_map=c_map, **kwargs)
+            ).align_to(align)
+            for text, c_map in zip(texts, c_maps)
+        ]
     )
 
 

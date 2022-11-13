@@ -2,4 +2,5 @@ venv
 media
 .idea
 *.tex
+!text_sources/*
 */media
