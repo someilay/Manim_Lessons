@@ -203,6 +203,64 @@ def get_dot_updater(follow: Dot, shift: np.ndarray) -> Callable[[Mobject], None]
     return lambda z: z.move_to(follow.get_center() + shift)
 
 
+def extended_line_updater(first: Dot, second: Dot, unit_scale: float) -> Callable[[Mobject], None]:
+    return lambda z: z.move_to(second.get_center() + unit_scale * normalize(second.get_center() - first.get_center()))
+
+
+def bisector_dir(first: Dot, second: Dot, third: Dot):
+    r1 = first.get_center() - second.get_center()
+    r2 = third.get_center() - second.get_center()
+    return rotate_vector(
+        normalize(r2), -angle_between_vectors(r1, r2) / 2
+    )
+
+
+def bisector_updater(first: Dot, second: Dot, third: Dot) -> Callable[[Mobject], None]:
+    return lambda z: z.move_to(
+        find_intersection(
+            [first.get_center()],
+            [third.get_center() - first.get_center()],
+            [second.get_center()],
+            [bisector_dir(first, second, third)]
+        )[0]
+    )
+
+
+def norm_dot_updater(first: Dot, second: Dot, third: Dot):
+    def updater(dot: Dot) -> Dot:
+        intersection = find_intersection(
+            [first.get_center()],
+            [rotate_vector(third.get_center() - second.get_center(), PI/2)],
+            [second.get_center()],
+            [third.get_center() - second.get_center()]
+        )[0]
+        return dot.move_to(intersection)
+    return updater
+
+
+def orthocenter_updater(first: Dot, second: Dot, third: Dot):
+    def updater(dot: Dot) -> Dot:
+        intersection = find_intersection(
+            [first.get_center()],
+            [rotate_vector(third.get_center() - second.get_center(), PI / 2)],
+            [second.get_center()],
+            [rotate_vector(third.get_center() - first.get_center(), PI / 2)]
+        )[0]
+        return dot.move_to(intersection)
+    return updater
+
+
+def intersection_updater(first: Dot, second: Dot, third: Dot, fourth: Dot) -> Callable[[Mobject], None]:
+    return lambda z: z.move_to(
+        find_intersection(
+            [first.get_center()],
+            [second.get_center() - first.get_center()],
+            [third.get_center()],
+            [fourth.get_center() - third.get_center()]
+        )[0]
+    )
+
+
 def get_optimal_title_loc(origin: Dot, dots: list[Dot]) -> np.ndarray:
     dot_1, dot_2 = max(
         zip(dots, dots[1:] + dots[:1]),

@@ -1,3 +1,4 @@
+from typing import Optional
 from manim import TexTemplate, TexTemplateLibrary
 
 
@@ -26,6 +27,15 @@ _RUS_PREAMBLE = r"""
 """
 
 RUS_TEMPLATE = TexTemplate(preamble=_RUS_PREAMBLE)
+
+
+def rus_template(width: Optional[int] = None):
+    if width is None:
+        return RUS_TEMPLATE
+    return TexTemplate(
+        documentclass=fr'\documentclass[preview, varwidth={width}px]{{standalone}}',
+        preamble=_RUS_PREAMBLE
+    )
 
 
 if __name__ == '__main__':

@@ -1,4 +1,25 @@
 from manim import *
+from typing import Optional
+
+
+# ShowCreationThenFadeOut
+class CreateThenFadeOut(Succession):
+    def __init__(self, mobject: VMobject, remover: bool = True, **kwargs) -> None:
+        super().__init__(Create(mobject), FadeOut(mobject), remover=remover, **kwargs)
+
+
+def mark_line(line: Line, c: Optional[str] = YELLOW, width: Optional[int] = None, reverse: bool = False, **kwargs):
+    if c is None:
+        c = line.get_color()
+    if width is None:
+        width = line.get_stroke_width() * 2
+
+    if reverse:
+        line = Line(line.get_end(), line.get_start()).set_z_index(line.z_index)
+    else:
+        line = line.copy()
+
+    return CreateThenFadeOut(line.set_stroke(c, width), **kwargs)
 
 
 def get_fade_out_moving(follow: Mobject) -> Callable:

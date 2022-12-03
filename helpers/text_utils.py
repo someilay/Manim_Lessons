@@ -1,5 +1,5 @@
 from manim import *
-from typing import Optional, Callable, Union
+from typing import Optional, Callable, Union, Iterable
 
 
 def create_tex_group(texts: list[Union[str, list[str]]], align: np.ndarray, font_size: float,
@@ -81,3 +81,8 @@ def straight_forward_proof(scene: Scene, proof: VGroup, move_to: Callable[[VGrou
             ),
             run_time=tr_run_time
         )
+
+
+def update_matrix(m: Union[Matrix, Table], values: Iterable):
+    for mob, value in zip(m.get_entries(), values):
+        mob.set_value(value)
